@@ -7,6 +7,9 @@ class Lap(models.Model):
     sector2_time = models.TimeField(null=True, blank=True)
     sector3_time = models.TimeField(null=True, blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         fastest = " (Fastest)" if self.is_fastest else ""
         return f"Lap {self.lap_number} - {self.lap_time:.3f}s{fastest}"
