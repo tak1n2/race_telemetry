@@ -6,12 +6,10 @@ from apps.core.models.lap import Lap
 class TelemetryPoint(models.Model):
     timestamp = models.TimeField(help_text="Seconds since lap start")
     speed = models.FloatField(help_text="km/h")
+    rpm = models.IntegerField()
     throttle = models.FloatField(help_text="0-100%")
     brake = models.FloatField(help_text="0-100%")
     gear = models.IntegerField()
-    rpm = models.IntegerField()
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
 
     lap = models.ForeignKey(Lap, on_delete=models.CASCADE, related_name="telemetry")
 
