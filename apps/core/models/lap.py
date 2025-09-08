@@ -5,10 +5,10 @@ from apps.core.models import Driver, Track, Car
 
 class Lap(models.Model):
     lap_number = models.IntegerField()
-    lap_time = models.TimeField(help_text="Lap time in seconds")
-    sector1_time = models.TimeField(null=True, blank=True)
-    sector2_time = models.TimeField(null=True, blank=True)
-    sector3_time = models.TimeField(null=True, blank=True)
+    lap_time = models.TimeField(help_text="Lap time in [mm:ss:msms]")
+    sector1_time = models.FloatField(null=True, blank=True)
+    sector2_time = models.FloatField(null=True, blank=True)
+    sector3_time = models.FloatField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

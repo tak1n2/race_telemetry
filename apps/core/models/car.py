@@ -7,5 +7,8 @@ class Car(models.Model):
     model = models.CharField(max_length=120)
     year = models.IntegerField()
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f"{self.maker} {self.model} ({self.year})"
