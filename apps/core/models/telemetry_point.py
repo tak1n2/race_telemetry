@@ -11,6 +11,9 @@ class TelemetryPoint(models.Model):
     brake = models.FloatField(help_text="0-100%")
     gear = models.IntegerField()
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     lap = models.ForeignKey(Lap, on_delete=models.CASCADE, related_name="telemetry")
 
     def __str__(self):
