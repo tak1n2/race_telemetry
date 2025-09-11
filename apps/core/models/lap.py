@@ -1,6 +1,8 @@
 from django.db import models
 
-from apps.core.models import Driver, Track, Car
+from .driver import Driver
+from .track import Track
+from .car import Car
 
 
 class Lap(models.Model):
