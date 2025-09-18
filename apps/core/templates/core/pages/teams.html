@@ -21,6 +21,9 @@
                 <tr>
                     <td class="item">{{ team.name}}</td>
                     <td class="item">{{ team.country}}</td>
+                    <td  class="item">
+                        <a href="{% url 'team_detail' team.id %}">⋮</a>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
