@@ -3,14 +3,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Site{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'styles.css'%}">
+    <title>{% block title %}Title{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-    {% block header %}{% endblock %}
+    <div class="wrapper">
+    {% block header %}{% include 'core/includes/header.html' %}{% endblock header %}
     <main>
-        {% block main %}{% endblock %}
+        <h3>{% block caption %}{% endblock caption %}</h3>
+        {% block content %}{% endblock content %}
     </main>
-    {% block footer %}{% endblock %}
+    {% block footer %}{% include 'core/includes/footer.html' %}{% endblock footer %}
+    </div>
 </body>
 </html>
+

@@ -3,5 +3,6 @@ from apps.core.views import about_view, welcome_view
 
 urlpatterns=[
     path('',welcome_view, name='welcome'),
-    path('about/',about_view, name='about'),
+    path('drivers/',drivers_view, name='drivers'),
+    path('tack_selection/',about_view, name='track_selection'),
 ]

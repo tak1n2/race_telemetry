@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{%  load static %}
+{% block title %} Drivers {% endblock %}
+{% block caption  %} Drivers {% endblock caption  %} 
+{% block content %}
+    <div>
+        <form action="{% url 'drivers' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="fist_name" placeholder="First Name" requried>
+            <input type="text" name="last_name" placeholder="Last Name" requried>
+            <input type="number" name="number" placeholder="Number" requried>
+            <input type="text" name="country" placeholder="Country" requried>
+            <select name="team" id="team">
+                {% for team in teams %}
+                    <option value="{{ team.value }}>{{ team.label }}"></option>
+                {% endfor %}
+            </select>
+            <button type="submit">Save 💾</button>
+        </form>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Number</th>
+                <th>Country</th>
+                <th>Team</th>
+            </tr>
+            {% for driver in driver_list %}
+                <tr>
+                    <td>{{ driver.first_name}}</td>
+                    <td>{{ driver.last_name}}</td>
+                    <td>{{ driver.number}}</td>
+                    <td>{{ driver.country}}</td>
+                    <td>{{ driver.team}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock content %}
+
