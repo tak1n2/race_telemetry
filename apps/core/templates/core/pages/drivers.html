@@ -1,39 +1,39 @@
 {% extends "base.html" %}
 {%  load static %}
 {% block title %} Drivers {% endblock %}
-{% block caption  %} Drivers {% endblock caption  %} 
+{% block caption  %} Drivers {% endblock caption  %}
 {% block content %}
     <div>
         <form action="{% url 'drivers' %}" method="post">
             {% csrf_token %}
-            <input type="text" name="fist_name" placeholder="First Name" requried>
-            <input type="text" name="last_name" placeholder="Last Name" requried>
-            <input type="number" name="number" placeholder="Number" requried>
-            <input type="text" name="country" placeholder="Country" requried>
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="number" name="number" placeholder="Number" required>
+            <input type="text" name="country" placeholder="Country" required>
             <select name="team" id="team">
                 {% for team in teams %}
-                    <option value="{{ team.value }}>{{ team.label }}"></option>
-                {% endfor %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                 {% endfor %}
             </select>
             <button type="submit">Save 💾</button>
         </form>
     </div>
     <div>
-        <table>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Number</th>
-                <th>Country</th>
-                <th>Team</th>
+        <table class="card">
+            <tr >
+                <th class="card__title">First Name</th>
+                <th class="card__title">Last Name</th>
+                <th class="card__title">Number</th>
+                <th class="card__title">Country</th>
+                <th class="card__title">Team</th>
             </tr>
             {% for driver in driver_list %}
-                <tr>
-                    <td>{{ driver.first_name}}</td>
-                    <td>{{ driver.last_name}}</td>
-                    <td>{{ driver.number}}</td>
-                    <td>{{ driver.country}}</td>
-                    <td>{{ driver.team}}</td>
+                <tr class="card__right">
+                    <td class="item">{{ driver.first_name}}</td>
+                    <td class="item">{{ driver.last_name}}</td>
+                    <td class="item">{{ driver.number}}</td>
+                    <td class="item">{{ driver.country}}</td>
+                    <td class="item">{{ driver.team}}</td>
                 </tr>
             {% endfor %}
         </table>

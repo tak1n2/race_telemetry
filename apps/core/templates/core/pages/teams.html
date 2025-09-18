@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{%  load static %}
+{% block title %} Teams {% endblock %}
+{% block caption  %} Teams {% endblock caption  %}
+{% block content %}
+    <div>
+        <form action="{% url 'teams' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="country" placeholder="Country" required>
+            <button type="submit">Save 💾</button>
+        </form>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Country</th>
+            </tr>
+            {% for team in team_list %}
+                <tr>
+                    <td class="item">{{ team.name}}</td>
+                    <td class="item">{{ team.country}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock content %}
