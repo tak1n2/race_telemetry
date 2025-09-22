@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Track Detail{% endblock %}
+{% block content %}
+
+<div class="track-detail">
+  <section class="track-media card-like">
+
+    {% if track.photo %}
+      <img src="{{ track.photo.url }}" alt="{{ track.name }}" class="track-photo">
+    {% else %}
+      <div class="no-photo">No photo uploaded</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+      {% csrf_token %}
+      <label class="btn">
+        {{ track_form.photo }}
+      </label>
+      <button type="submit" name="submit_track" class="btn primary">Update cover</button>
+    </form>
+    <small class="hint">Accepted: JPG/PNG • up to ~5MB</small>
+  </section>
+
+
+  <section class="track-form">
+    <h3 class="section-title">Details</h3>
+    <form method="post" id="track-detail-form" enctype="multipart/form-data" class="form">
+      {% csrf_token %}
+      {{ track_form.non_field_errors }}
+
+      <div class="field">
+        {{ track_form.name.label_tag }}
+        {{ track_form.name }}
+        {{ track_form.name.errors }}
+      </div>
+
+      <div class="field">
+        {{ track_form.location.label_tag }}
+        {{ track_form.location }}
+        {{ track_form.location.errors }}
+      </div>
+
+      <div class="field two">
+        <div>
+          {{ track_form.length_km.label_tag }}
+          {{ track_form.length_km }}
+          {{ track_form.length_km.errors }}
+        </div>
+        <div>
+          {{ track_form.turns.label_tag }}
+          {{ track_form.turns }}
+          {{ track_form.turns.errors }}
+        </div>
+      </div>
+
+      <button type="submit" name="submit_track" class="btn primary">Save changes</button>
+    </form>
+  </section>
+</div>
+
+{% endblock %}

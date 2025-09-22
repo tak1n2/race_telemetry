@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Tracks{% endblock %}
+{% block caption %}Tracks{% endblock %}
+{% block content %}
+<div>
+  <form class="form" action="{% url 'tracks' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input class="input" type="text" name="name" placeholder="Name" required>
+    <input class="input" type="text"  name="location" placeholder="Location" required>
+    <input class="input" type="number" name="length_km" step="0.001" placeholder="Length (km)" required>
+    <input class="input" type="number" name="turns" placeholder="Turns" required>
+
+    <input class="input" type="file" name="photo" accept="image/*">
+    <button type="submit">Save 💾</button>
+  </form>
+</div>
+
+<div>
+  <table class="card">
+    <tr>
+      <th class="card__title">Name</th>
+      <th class="card__title">Location</th>
+      <th class="card__title">Length (km)</th>
+      <th class="card__title">Turns</th>
+      <th class="card__title">Photo</th>
+      <th></th>
+    </tr>
+
+    {% for track in track_list %}
+      <tr class="card__right">
+        <td class="item">{{ track.name }}</td>
+        <td class="item">{{ track.location }}</td>
+        <td class="item">{{ track.length_km }}</td>
+        <td class="item">{{ track.turns }}</td>
+        <td class="item">
+          {% if track.photo %}
+            <img src="{{ track.photo.url }}" alt="{{ track.name }}" style="height:48px; border-radius:6px;">
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td class="item">
+          <a href="{% url 'track_detail' track.id %}">⋮</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

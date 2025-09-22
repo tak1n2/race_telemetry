@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Lap Telemetry{% endblock %}
+{% block content %}
+
+<form method="post" class="form" style="max-width:900px; margin: 24px auto;">
+  {% csrf_token %}
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
+    {{ form.car }}
+    {{ form.driver }}
+    {{ form.track }}
+  </div>
+  <button type="submit" class="btn primary" style="margin-top:10px;">Simulate</button>
+</form>
+
+{% if sim %}
+<div class="telemetry-wrap">
+  <section class="telemetry-card">
+    <div class="telemetry-header">
+      <div>
+        <div class="pos">LAP</div>
+        <div class="driver-name">{{ driver.first_name }} <b>{{ driver.last_name }}</b></div>
+        <div class="team-name">{{ car.maker }} {{ car.model }}</div>
+      </div>
+      <div class="lap-time">
+        <div class="label">LAP TIME</div>
+        <div class="value">{{ sim.lap_time_str }}</div>
+        <div class="label small">CATEGORY: {{ sim.category }}</div>
+      </div>
+    </div>
+
+    <div class="track-and-bars">
+      <div class="track-card">
+        <div class="track-title">{{ track.name }}</div>
+        {% if track.photo %}
+          <img src="{{ track.photo.url }}" alt="{{ track.name }}" class="track-photo-lg">
+        {% else %}
+          <div class="no-photo">No track image</div>
+        {% endif %}
+      </div>
+
+      <div class="bars">
+        <div class="bar">
+          <div>FULL THROTTLE</div>
+          <div class="bar-bg"><div class="bar-fill blue" style="width: {{ sim.full_throttle_pct }}%"></div></div>
+          <span>{{ sim.full_throttle_pct }}%</span>
+        </div>
+        <div class="bar">
+          <div>HEAVY BRAKING</div>
+          <div class="bar-bg"><div class="bar-fill orange" style="width: {{ sim.heavy_braking_pct }}%"></div></div>
+          <span>{{ sim.heavy_braking_pct }}%</span>
+        </div>
+        <div class="bar">
+          <div>CORNERING</div>
+          <div class="bar-bg"><div class="bar-fill yellow" style="width: {{ sim.cornering_pct }}%"></div></div>
+          <span>{{ sim.cornering_pct }}%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="telemetry-card">
+  <div class="graph-title">Speed (km/h)</div>
+
+ <svg viewBox="0 0 1000 260" class="speed-graph">
+  <rect x="0" y="0" width="1000" height="260" fill="#0b1220" rx="10"></rect>
+
+  {% for t in y_ticks %}
+    <line x1="40" y1="{{ t.y }}" x2="960" y2="{{ t.y }}" stroke="#1f2a44" stroke-width="1" opacity="0.5"/>
+    <text x="8" y="{{ t.y|add:'4' }}" fill="#9fb7df" font-size="11">{{ t.label }}</text>
+  {% endfor %}
+
+  {% for t in x_ticks %}
+    <line x1="{{ t.x }}" y1="40" x2="{{ t.x }}" y2="220" stroke="#1f2a44" stroke-width="1" opacity="0.35"/>
+    <text x="{{ t.x|add:'-14' }}" y="238" fill="#9fb7df" font-size="10">{{ t.label }}</text>
+  {% endfor %}
+
+  <line x1="40" y1="40" x2="40" y2="220" stroke="#3b4a6a" stroke-width="1"/>
+  <line x1="40" y1="220" x2="960" y2="220" stroke="#3b4a6a" stroke-width="1"/>
+
+  <polyline points="{{ sim_polyline }}" fill="none" stroke="#4ea1ff" stroke-width="2"/>
+</svg>
+
+</section>
+</div>
+{% endif %}
+
+{% endblock %}

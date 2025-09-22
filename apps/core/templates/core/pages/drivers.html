@@ -4,12 +4,12 @@
 {% block caption  %} Drivers {% endblock caption  %}
 {% block content %}
     <div>
-        <form action="{% url 'drivers' %}" method="post">
+        <form class="form" action="{% url 'drivers' %}" method="post">
             {% csrf_token %}
-            <input type="text" name="first_name" placeholder="First Name" required>
-            <input type="text" name="last_name" placeholder="Last Name" required>
-            <input type="number" name="number" placeholder="Number" required>
-            <input type="text" name="country" placeholder="Country" required>
+            <input class="input" type="text" name="first_name" placeholder="First Name" required>
+            <input class="input" type="text" name="last_name" placeholder="Last Name" required>
+            <input class="input" type="number" name="number" placeholder="Number" required>
+            <input class="input" type="text" name="country" placeholder="Country" required>
             <select name="team" id="team">
                 {% for team in teams %}
                     <option value="{{ team.id }}">{{ team.name }}</option>
@@ -26,6 +26,8 @@
                 <th class="card__title">Number</th>
                 <th class="card__title">Country</th>
                 <th class="card__title">Team</th>
+                <th class="card__title">Live Driver Rating</th>
+
             </tr>
             {% for driver in driver_list %}
                 <tr class="card__right">
@@ -34,6 +36,11 @@
                     <td class="item">{{ driver.number}}</td>
                     <td class="item">{{ driver.country}}</td>
                     <td class="item">{{ driver.team}}</td>
+                    <td class="item">
+                      <span class="stars driver">
+                        {% for i in "x"|ljust:driver.rating %}★{% endfor %}
+                      </span>
+                    </td>
                     <td class="item">
                         <a href="{% url 'driver_detail' driver.id %}">⋮</a>
                     </td>

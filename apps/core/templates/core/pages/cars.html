@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Cars {% endblock %}
+{% block caption %} Cars {% endblock %}
+{% block content %}
+
+<div>
+  <form class="form" action="{% url 'cars' %}" method="post">
+    {% csrf_token %}
+    <input class="input" type="text"   name="type"   placeholder="Type (e.g., Sedan)" required>
+    <input class="input" type="text"   name="maker"  placeholder="Maker (e.g., Toyota)" required>
+    <input class="input" type="text"   name="model"  placeholder="Model (e.g., Corolla)" required>
+    <input class="input" type="number" name="year"   placeholder="Year" min="1900" max="2100" required>
+    <input class="input" type="number" name="rating" placeholder="Rating 1–10 (11-15 F1 rating)" min="1" max="15" required>
+    <button type="submit">Save 💾</button>
+  </form>
+</div>
+
+<div>
+  <table class="card">
+    <tr>
+      <th class="card__title">Type</th>
+      <th class="card__title">Maker</th>
+      <th class="card__title">Model</th>
+      <th class="card__title">Year</th>
+      <th class="card__title">Rating</th>
+      <th class="card__title"></th>
+    </tr>
+    {% for car in car_list %}
+      <tr class="card__right">
+        <td class="item">{{ car.type }}</td>
+        <td class="item">{{ car.maker }}</td>
+        <td class="item">{{ car.model }}</td>
+        <td class="item">{{ car.year }}</td>
+        <td class="item">
+          {% if car.rating <= 10 %}
+            <span class="stars normal">
+              {% for i in "x"|ljust:car.rating %}★{% endfor %}
+            </span>
+          {% else %}
+            <span class="stars f1">
+              {% for i in "x"|ljust:car.rating %}★{% endfor %}
+            </span>
+          {% endif %}
+        </td>
+        <td class="item">
+          <a href="{% url 'car_detail' car.id %}">⋮</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td class="item" colspan="6"><em>No cars yet</em></td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

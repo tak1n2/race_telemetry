@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Car Detail{% endblock %}
+{% block content %}
+
+<div class="track-detail">
+  <section class="track-form">
+    <h3 class="section-title">Car details</h3>
+
+    <form method="post" id="car-detail-form" class="form">
+      {% csrf_token %}
+      {{ car_form.non_field_errors }}
+
+      <div class="field">
+        {{ car_form.type.label_tag }}
+        {{ car_form.type }}
+        {{ car_form.type.errors }}
+      </div>
+
+      <div class="field two">
+        <div>
+          {{ car_form.maker.label_tag }}
+          {{ car_form.maker }}
+          {{ car_form.maker.errors }}
+        </div>
+        <div>
+          {{ car_form.model.label_tag }}
+          {{ car_form.model }}
+          {{ car_form.model.errors }}
+        </div>
+      </div>
+
+      <div class="field two">
+        <div>
+          {{ car_form.year.label_tag }}
+          {{ car_form.year }}
+          {{ car_form.year.errors }}
+        </div>
+        <div>
+          {{ car_form.rating.label_tag }}
+          {{ car_form.rating }}
+          {{ car_form.rating.errors }}
+        </div>
+      </div>
+
+      <button type="submit" name="submit_car" class="btn primary">Save changes</button>
+    </form>
+  </section>
+</div>
+
+{% endblock %}
