@@ -10,6 +10,7 @@
             <input class="input" type="text" name="last_name" placeholder="Last Name" required>
             <input class="input" type="number" name="number" placeholder="Number" required>
             <input class="input" type="text" name="country" placeholder="Country" required>
+            <input class="input" type="text" name="rating" placeholder="Rating 1-10" required>
             <select name="team" id="team">
                 {% for team in teams %}
                     <option value="{{ team.id }}">{{ team.name }}</option>

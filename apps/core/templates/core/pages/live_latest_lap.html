@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Live lap{% endblock %}
+{% block content %}
+
+<!-- Bind form + Export -->
+<div style="max-width:1200px;margin:12px auto;display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap">
+  <form method="post" class="form" style="display:flex;gap:8px;align-items:flex-end;">
+    {% csrf_token %}
+    <div>
+      <label>Car</label>{{ bind_form.car }}
+    </div>
+    <div>
+      <label>Driver</label>{{ bind_form.driver }}
+    </div>
+    <div>
+      <label>Track</label>{{ bind_form.track }}
+    </div>
+    <button class="btn" type="submit">Bind to session</button>
+  </form>
+
+  <a class="btn" href="{% url 'live_lap_export' lap_id %}">Save lap as ZIP</a>
+</div>
+
+<!-- Meta + controls -->
+<div class="telemetry-meta form" style="max-width:1200px;margin:15px auto;">
+  <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+    <span class="badge">Car: <strong id="meta-car">—</strong></span>
+    <span class="badge">Driver: <strong id="meta-driver">—</strong></span>
+    <span class="badge">Track: <strong id="meta-track">—</strong></span>
+    <span class="badge">Lap: <strong id="meta-lap">—</strong></span>
+    <span class="badge">Lap time: <strong id="meta-laptime">—</strong></span>
+  </div>
+
+  <!-- NEW controls: zoom, pan, reset, scrub -->
+  <div style="display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap">
+    <button id="btn-zoom-in"  class="btn">＋ Zoom</button>
+    <button id="btn-zoom-out" class="btn">－ Zoom</button>
+    <button id="btn-pan-left"  class="btn">← Pan</button>
+    <button id="btn-pan-right" class="btn">Pan →</button>
+    <button id="btn-reset"     class="btn">Reset</button>
+
+    <div style="display:flex; align-items:center; gap:8px; min-width:260px; margin-left:6px">
+      <span style="color:#cbd5e1; font-size:12px">Scroll:</span>
+      <input id="scrub" type="range" min="0" value="0" step="0.1" style="width:260px; accent-color:#3b8df2">
+    </div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="chart-card">
+  <h4 class="chart-title">Speed (km/h)</h4>
+  <div class="chart-wrap"><canvas id="chartSpeed"></canvas></div>
+</div>
+
+<div class="chart-card">
+  <h4 class="chart-title">Throttle / Brake (%)</h4>
+  <div class="chart-wrap"><canvas id="chartTB"></canvas></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+
+<style>
+  .badge { color:#fff; background:#0c6; padding:4px 10px; border-radius:999px; }
+  .btn { padding:6px 10px; border-radius:8px; border:none; background:#3b8df2; color:#fff; cursor:pointer; }
+  .chart-card { background:#0f172a; border-radius:12px; padding:12px; margin:18px auto; max-width:1200px; box-shadow:0 8px 24px rgba(0,0,0,.2); }
+  .chart-title { color:#cbd5e1; margin:6px 0 12px; font-weight:600;}
+  .chart-wrap { position:relative; height:420px; }
+  canvas { max-height: 100%; }
+</style>
+
+<script>
+(async function(){
+  const lapId = {{ lap_id }};
+  const res = await fetch(`/live/laps/${lapId}/telemetry.json`);
+  const { t, speed, thr, brk, meta } = await res.json();
+
+  // авто-перезавантаження коли з’являється нове коло
+  const currentLapId = {{ lap_id }};
+  async function pollLatest() {
+    try {
+      const r = await fetch("{% url 'live_latest_lap_id' %}", {cache:'no-store'});
+      const j = await r.json();
+      if (j.lap_id && j.lap_id !== currentLapId) location.reload();
+    } catch (e) {}
+  }
+  setInterval(pollLatest, 3000);
+
+  // badges
+  const msFmt = ms => ms == null ? "—" : (() => {
+    const s = Math.floor(ms/1000), m = Math.floor(s/60);
+    return `${m}:${(ms/1000 - m*60).toFixed(3).padStart(6,"0")}`;
+  })();
+  document.getElementById("meta-car").textContent    = meta.car_label   || "—";
+  document.getElementById("meta-driver").textContent = meta.driver_label|| "—";
+  document.getElementById("meta-track").textContent  = meta.track_label || "—";
+  document.getElementById("meta-lap").textContent    = meta.lap_number  ?? "—";
+  document.getElementById("meta-laptime").textContent= msFmt(meta.lap_time_ms);
+
+  // XY datasets
+  const speedXY = t.map((x,i)=>({x, y: speed[i]}));
+  const thrXY   = t.map((x,i)=>({x, y: thr[i]}));
+  const brkXY   = t.map((x,i)=>({x, y: brk[i]}));
+
+  const lapEnd = (meta.lap_time_ms ? meta.lap_time_ms/1000 : (t[t.length-1]||0));
+  const anno = [];
+  if (meta.s1_ms) anno.push({xMin: meta.s1_ms/1000, xMax: meta.s1_ms/1000, borderColor:"#f59e0b", borderWidth:1, label:{enabled:true, content:"S1"}});
+  if (meta.s1_ms && meta.s2_ms) anno.push({xMin:(meta.s1_ms+meta.s2_ms)/1000, xMax:(meta.s1_ms+meta.s2_ms)/1000, borderColor:"#10b981", borderWidth:1, label:{enabled:true, content:"S2"}});
+  if (meta.lap_time_ms) anno.push({xMin: lapEnd, xMax: lapEnd, borderColor:"#94a3b8", borderWidth:1, label:{enabled:true, content:"Finish"}});
+
+  const panZoom = {
+    zoom: { wheel:{enabled:true, modifierKey:'shift'}, pinch:{enabled:true}, mode:'x' },
+    pan:  { enabled:true, mode:'x', modifierKey:'ctrl' },
+    limits: { x: { min: 0, max: lapEnd } }
+  };
+
+  // charts
+  const speedChart = new Chart(document.getElementById("chartSpeed"), {
+    type:'line',
+    data:{ datasets:[{ label:'Speed', data:speedXY, pointRadius:0, tension:.25, borderWidth:2, fill:false }] },
+    options:{
+      maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      parsing:false,
+      scales:{ x:{ type:'linear', min:0, max:lapEnd, title:{display:true,text:'Time (s)'} },
+               y:{ title:{display:true,text:'km/h'} } },
+      plugins:{ legend:{display:false}, zoom:panZoom, annotation:{annotations:anno} }
+    }
+  });
+
+  const tbChart = new Chart(document.getElementById("chartTB"), {
+    type:'line',
+    data:{ datasets:[
+      { label:'Throttle %', data:thrXY, pointRadius:0, tension:.2, borderWidth:2, fill:false },
+      { label:'Brake %',    data:brkXY, pointRadius:0, tension:.2, borderWidth:2, fill:false },
+    ]},
+    options:{
+      maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      parsing:false,
+      scales:{ x:{ type:'linear', min:0, max:lapEnd, title:{display:true,text:'Time (s)'} },
+               y:{ title:{display:true,text:'%'}, min:0, max:100 } },
+      plugins:{ legend:{display:true}, zoom:panZoom, annotation:{annotations:anno} }
+    }
+  });
+
+  // ===== Viewport utils (спільні для двох графіків) =====
+  const scrub = document.getElementById("scrub");
+  const getXR = () => {
+    const sx = speedChart.scales.x;
+    return {min: sx.min, max: sx.max};
+  };
+  const setXR = (min, max) => {
+    min = Math.max(0, Math.min(min, lapEnd - 0.001));
+    max = Math.min(lapEnd, Math.max(max, min + 0.001));
+    speedChart.zoomScale('x', {min, max}, 'none');
+    tbChart.zoomScale('x', {min, max}, 'none');
+    const center = (min + max) / 2;
+    scrub.value = center.toFixed(2);
+  };
+
+  // стартове вікно (20% кола або 12c)
+  const initWindow = Math.min(lapEnd * 0.2, 12);
+  setXR(0, Math.max(initWindow, 3));
+
+  // кнопки
+  const ZOOM_IN  = 0.8;
+  const ZOOM_OUT = 1.25;
+  const PAN_FRAC = 0.25;
+
+  document.getElementById("btn-zoom-in").onclick = () => {
+    const {min, max} = getXR();
+    const c = (min + max) / 2;
+    const half = (max - min) / 2 * ZOOM_IN;
+    setXR(c - half, c + half);
+  };
+  document.getElementById("btn-zoom-out").onclick = () => {
+    const {min, max} = getXR();
+    const c = (min + max) / 2;
+    const half = (max - min) / 2 * ZOOM_OUT;
+    setXR(c - half, c + half);
+  };
+  document.getElementById("btn-pan-left").onclick  = () => {
+    const {min, max} = getXR();
+    const span = (max - min);
+    setXR(min - span * PAN_FRAC, max - span * PAN_FRAC);
+  };
+  document.getElementById("btn-pan-right").onclick = () => {
+    const {min, max} = getXR();
+    const span = (max - min);
+    setXR(min + span * PAN_FRAC, max + span * PAN_FRAC);
+  };
+  document.getElementById("btn-reset").onclick = () => {
+    speedChart.resetZoom(); tbChart.resetZoom();
+    setXR(0, Math.max(initWindow, 3));
+  };
+
+  // повзунок (скролить вікно без зміни масштабу)
+  scrub.max = lapEnd.toFixed(2);
+  scrub.addEventListener("input", () => {
+    const {min, max} = getXR();
+    const span = (max - min);
+    const center = Math.max(span/2, Math.min(lapEnd - span/2, parseFloat(scrub.value) || 0));
+    setXR(center - span/2, center + span/2);
+  });
+})();
+</script>
+{% endblock %}

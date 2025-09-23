@@ -221,8 +221,16 @@ header a {
   padding: 0;
 }
 
-.content {
+.main {
   flex: 1;
+}
+
+.wrapper {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 5px;
 }
 
 footer {

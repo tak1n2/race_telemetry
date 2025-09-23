@@ -1,10 +1,16 @@
 from django.urls import path
-from apps.core.views import about_view, welcome_view, teams, drivers, DriverDetailUpdateView, TeamDetailUpdateView, \
-    tracks, TrackDetailUpdateView, cars, CarDetailUpdateView, lap_telemetry
+from apps.core.views import welcome_view, teams, drivers, DriverDetailUpdateView, TeamDetailUpdateView, \
+    tracks, TrackDetailUpdateView, cars, CarDetailUpdateView, lap_telemetry, live_telemetry, live_latest_lap_page, \
+    live_lap_telemetry, live_latest_lap_id, live_lap_export
 
 urlpatterns=[
     path('',welcome_view, name='welcome'),
+    path("live/latest/", live_latest_lap_page, name="live_latest_lap"),
+    path("live/laps/<int:lap_id>/telemetry.json", live_lap_telemetry, name="live_lap_telemetry"),
 
+    path("live/latest/id.json", live_latest_lap_id, name="live_latest_lap_id"),
+    path("live/laps/<int:lap_id>/export.zip", live_lap_export, name="live_lap_export"),
+    path("live-telemetry/", live_telemetry, name="live_telemetry"),
     path("lap-telemetry/", lap_telemetry, name="lap_telemetry"),
     path('drivers/',drivers, name='drivers'),
     path('teams/',teams, name='teams'),

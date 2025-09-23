@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Live lap{% endblock %}
+{% block content %}
+<div style="max-width:900px;margin:40px auto;padding:24px;border-radius:12px;background:#0f172a;color:#cbd5e1;box-shadow:0 8px 24px rgba(0,0,0,.2)">
+  <h2 style="margin:0 0 10px;font-weight:700">Live lap</h2>
+  <p>Ще немає зафіксованого кола з телеметрією для поточної live-сесії.</p>
+  <p>Запусти гру/збір телеметрії — і як тільки зʼявиться перше коло, ця сторінка покаже графіки.</p>
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn" href="{% url 'welcome' %}" style="padding:8px 12px;border-radius:8px;background:#3b8df2;color:#fff;text-decoration:none">На головну</a>
+    <a class="btn" href="{% url 'live_latest_lap' %}" style="padding:8px 12px;border-radius:8px;background:#10b981;color:#0b1220;text-decoration:none">Спробувати знову</a>
+  </div>
+</div>
+{% endblock %}

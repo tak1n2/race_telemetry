@@ -13,6 +13,15 @@ class DriverForm(forms.ModelForm):
             raise forms.ValidationError("Rating must be between 1 and 10.")
         return r
 
+class LiveSetupForm(forms.Form):
+    car = forms.ModelChoiceField(queryset=Car.objects.all(), widget=forms.Select(attrs={"class":"input"}))
+    driver = forms.ModelChoiceField(queryset=Driver.objects.all(), widget=forms.Select(attrs={"class":"input"}))
+    track = forms.ModelChoiceField(queryset=Track.objects.all(), widget=forms.Select(attrs={"class":"input"}))
+
+class LiveBindForm(forms.Form):
+    car    = forms.ModelChoiceField(queryset=Car.objects.all(), required=False)
+    driver = forms.ModelChoiceField(queryset=Driver.objects.all(), required=False)
+    track  = forms.ModelChoiceField(queryset=Track.objects.all(), required=False)
 
 class LapSimulationForm(forms.Form):
     car = forms.ModelChoiceField(queryset=Car.objects.all(), widget=forms.Select(attrs={"class": "input"}))
