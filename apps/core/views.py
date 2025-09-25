@@ -5,6 +5,9 @@ from io import BytesIO
 import json
 
 import matplotlib.pyplot as plt
+from django.contrib.auth import get_user_model
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, JsonResponse, Http404, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,11 +15,12 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.http import require_http_methods
 from django.views import generic
+from django.views.generic import TemplateView
 
 from apps.core.forms import TeamForm, DriverForm, TrackForm, CarForm, LapSimulationForm, LiveSetupForm, LiveBindForm
 from apps.core.models import Driver, Team, Track, Car, LiveSession, LiveTelemetryPoint, LiveLap
 from apps.core.services.lap_sim import simulate_lap, build_speed_polyline, build_ticks_y, build_ticks_x
-from apps.users.forms import CustomUserCreationForm
+from apps.users.forms import CustomUserCreationForm, CustomAuthenticationForm
 
 
 # Create your views here.
@@ -251,16 +255,25 @@ def live_lap_telemetry(request, lap_id: int):
     }
     return JsonResponse({"t": t, "speed": speed, "thr": thr, "brk": brk, "meta": meta})
 
+User = get_user_model()
 class RegisterView(generic.CreateView):
+    model = User
     form_class = CustomUserCreationForm
     template_name = "core/pages/register.html"
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy('welcome')
 
+def logout_view(request):
+    template_name = "core/pages/welcome.html"
+    auth_logout(request)
+    return redirect('logged_out')
 
-
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'core/pages/profile.html'
 
 class CustomLoginView(LoginView):
     template_name = "core/pages/login.html"
+    authentication_form =   CustomAuthenticationForm
+    redirect_authenticated_user = True
 
 @require_http_methods(["GET", "POST"])
 def lap_telemetry(request):

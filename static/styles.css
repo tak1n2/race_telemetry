@@ -1,19 +1,27 @@
 /*HEADER*/
 header {
     background: #dddddd;
-    padding: 10px;
-    height: 30px;
-    border-radius: 7px;
-    display: flex;
-    gap: 1rem;
+  padding: 10px;
+  border-radius: 7px;
 }
+header nav {
+  display: flex;
+  align-items: center;
+}
+
 header ul {
     list-style: none;
-    display: flex;
-    gap: 1rem;
-    padding: 3px 0 0 0;
-    margin: 0;
+      display: flex;
+      gap: 1rem;
+      padding: 3px 0 0 0;
+      margin: 0;
 }
+
+.nav-left { }
+.nav-right { margin-left: auto; }
+header a { font-size: 20px; }
+
+
 header a {
     font-size: 20px;
 }
@@ -310,4 +318,26 @@ footer {
 .log{
      float: right;
 }
+
+.auth-wrap { max-width: 640px; margin: 48px auto; padding: 0 16px; }
+.auth-card { max-width: 640px; margin: 0 auto; }
+.auth-title { color: #fff; margin: 0 0 8px 0; text-align: center; }
+.auth-switch { margin-top: 12px; color: #e5e7eb; text-align: center; }
+.auth-switch a { color: #3b8df2; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+.w-full { width: 100%; }
+
+
+input[type="file"].input { padding: 6px; background: rgba(255,255,255,.07); border-radius: 6px; }
+
+
+:root { color-scheme: dark; }
+body { background:#1f1f1f; color:#e5e5e5; }
+header, .card { background:#2a2a2a; color:#e5e5e5; border-radius:12px; padding:16px; }
+a { color:#9ad0ff; }
+.btn { display:inline-block; padding:.5rem .9rem; background:#3a3a3a; border-radius:8px; text-decoration:none; }
+.btn:hover { background:#4a4a4a; }
+h1,h2,h3 { text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+
+
 

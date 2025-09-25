@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {%  load static %}
 {% block title %}Welcome{% endblock %}
-{% block main %}
-    <h3>Welcome</h3>
+{% block content %}
+    <h1 style="font-size:48px; letter-spacing:.06em;">Welcome to Race World</h1>
+    <p>Твоя телеметрія, твоя швидкість.</p>
     <p>
         <a href="{% url 'login' %}">Login</a> ·
         <a href="{% url 'register' %}">Register</a>
     </p>
-{% endblock main %}
+{% endblock %}
 

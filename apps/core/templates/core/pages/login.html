@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
-{% block main %}
-<h2>Login</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign in</button>
-</form>
-<p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+{% block content %}
+  <div class="auth-wrap">
+    <form method="post" class="form auth-card">
+      <h2 class="auth-title">Login</h2>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="field">
+        <label>Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      <div class="field">
+        <label>Password</label>
+        {{ form.password }}
+        {{ form.password.errors }}
+      </div>
+      <button type="submit" class="btn primary w-full">Sign in</button>
+      <p class="auth-switch">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+    </form>
+  </div>
 {% endblock %}

@@ -1,15 +1,25 @@
 <header>
-    <nav>
-        <ul class="nav-left">
-        <li><a href="{% url 'welcome' %}">Welcome</a></li>
-            <li><a href="{% url 'lap_telemetry' %}">Simulate your lap</a></li>
-            <li><a href="{% url 'live_latest_lap' %}">Live lap</a></li>
-        <li><a href="{% url 'drivers' %}">Drivers</a></li>
-        <li><a href="{% url 'teams' %}">Teams</a></li>
-        <li><a href="{% url 'tracks' %}">Tracks</a></li>
-        <li><a href="{% url 'cars' %}">Cars</a></li>
+  <nav>
+    <ul class="nav-left">
+      <li><a href="{% url 'welcome' %}">Welcome</a></li>
+      <li><a href="{% url 'lap_telemetry' %}">Simulate your lap</a></li>
+      <li><a href="{% url 'live_latest_lap' %}">Live lap</a></li>
+      <li><a href="{% url 'drivers' %}">Drivers</a></li>
+      <li><a href="{% url 'teams' %}">Teams</a></li>
+      <li><a href="{% url 'tracks' %}">Tracks</a></li>
+      <li><a href="{% url 'cars' %}">Cars</a></li>
+    </ul>
+
+    <ul class="nav-right">
+      {% if request.user.is_authenticated %}
+        <li><a class="log" href="{% url 'profile' %}">Profile</a></li>
+        <li>
+          <a class="log" href="{% url 'logout' %}">Logout</a>
+        </li>
+      {% else %}
         <li><a class="log" href="{% url 'login' %}">Login</a></li>
-        <li><a  class="log" href="{% url 'register' %}">Registration</a></li>
-        </ul>
-    </nav>
+        <li><a class="log" href="{% url 'register' %}">Registration</a></li>
+      {% endif %}
+    </ul>
+  </nav>
 </header>

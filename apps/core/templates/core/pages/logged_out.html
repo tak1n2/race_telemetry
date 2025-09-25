@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Logged out{% endblock %}
+
+{% block content %}
+  <div class="auth-wrap">
+    <div class="auth-card card-like">
+      <h1 class="auth-title">Ви вийшли із акаунта</h1>
+      <p class="auth-switch">
+        <a href="{% url 'login' %}">Увійти знову</a> або
+        <a href="{% url 'welcome' %}">на головну</a>.
+      </p>
+    </div>
+  </div>
+{% endblock %}

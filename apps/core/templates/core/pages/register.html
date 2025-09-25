@@ -1,11 +1,49 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
-{% block main %}
-<h2>Create account</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create account</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+{% block content %}
+  <div class="auth-wrap">
+    <form method="post" enctype="multipart/form-data" class="form auth-card">
+      <h2 class="auth-title">Create account</h2>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="field two">
+        <div>
+          <label>Username</label>
+          {{ form.username }}
+          {{ form.username.errors }}
+        </div>
+        <div>
+          <label>Email</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+      </div>
+      <div class="field two">
+        <div>
+          <label>Password</label>
+          {{ form.password1 }}
+          {{ form.password1.errors }}
+        </div>
+        <div>
+          <label>Confirm</label>
+          {{ form.password2 }}
+          {{ form.password2.errors }}
+        </div>
+      </div>
+      <div class="field two">
+        <div>
+          <label>Role</label>
+          {{ form.role }}
+          {{ form.role.errors }}
+        </div>
+        <div>
+          <label>Photo</label>
+          {{ form.photo }}
+          {{ form.photo.errors }}
+        </div>
+      </div>
+      <button type="submit" class="btn primary w-full">Create account</button>
+      <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+    </form>
+  </div>
 {% endblock %}

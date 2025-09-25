@@ -1,0 +1,29 @@
+    {% extends "base.html" %}
+    {% block title %}My profile{% endblock %}
+    {% block content %}
+      <div class="card" style="max-width: 720px; margin: 0 auto;">
+        <h2>Профіль</h2>
+
+        <div style="display:flex; gap:1rem; align-items:center;">
+          {% if request.user.avatar %}
+            <img src="{{ request.user.avatar.url }}" alt="avatar" style="width:96px;height:96px;border-radius:50%;object-fit:cover;">
+          {% else %}
+            <div style="width:96px;height:96px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-weight:700;">
+              {{ request.user.username|first|upper }}
+            </div>
+          {% endif %}
+
+          <div>
+            <div><strong>Логін:</strong> {{ request.user.username }}</div>
+            <div><strong>Email:</strong> {{ request.user.email }}</div>
+            <div><strong>Ім’я:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</div>
+            <div><strong>Роль:</strong> {{ request.user.role }}</div>
+            <div><strong>З нами з:</strong> {{ request.user.date_joined|date:"d.m.Y H:i" }}</div>
+            <div><strong>Останній вхід:</strong> {{ request.user.last_login|date:"d.m.Y H:i" }}</div>
+          </div>
+        </div>
+
+        <hr>
+        <a class="btn" href="{% url 'logout' %}">Вийти</a>
+      </div>
+    {% endblock %}
