@@ -5,14 +5,18 @@ from io import BytesIO
 import json
 
 import matplotlib.pyplot as plt
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, JsonResponse, Http404, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.http import require_http_methods
+from django.views import generic
 
 from apps.core.forms import TeamForm, DriverForm, TrackForm, CarForm, LapSimulationForm, LiveSetupForm, LiveBindForm
 from apps.core.models import Driver, Team, Track, Car, LiveSession, LiveTelemetryPoint, LiveLap
 from apps.core.services.lap_sim import simulate_lap, build_speed_polyline, build_ticks_y, build_ticks_x
+from apps.users.forms import CustomUserCreationForm
 
 
 # Create your views here.
@@ -247,7 +251,16 @@ def live_lap_telemetry(request, lap_id: int):
     }
     return JsonResponse({"t": t, "speed": speed, "thr": thr, "brk": brk, "meta": meta})
 
+class RegisterView(generic.CreateView):
+    form_class = CustomUserCreationForm
+    template_name = "registration/register.html"
+    success_url = reverse_lazy("login")
 
+
+
+
+class CustomLoginView(LoginView):
+    template_name = "registration/login.html"
 
 @require_http_methods(["GET", "POST"])
 def lap_telemetry(request):

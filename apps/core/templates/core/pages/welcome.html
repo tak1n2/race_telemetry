@@ -3,5 +3,9 @@
 {% block title %}Welcome{% endblock %}
 {% block main %}
     <h3>Welcome</h3>
+    <p>
+        <a href="{% url 'login' %}">Login</a> ·
+        <a href="{% url 'register' %}">Register</a>
+    </p>
 {% endblock main %}
 
