@@ -307,3 +307,7 @@ footer {
 .btn{ display:inline-flex; align-items:center; gap:.5rem; padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,.15); background:#2b2f36; color:#fff; cursor:pointer;}
 .btn.primary{ background: linear-gradient(135deg, #3b8df2, #0077be); border:none; }
 
+.log{
+     float: right;
+}
+

@@ -253,14 +253,14 @@ def live_lap_telemetry(request, lap_id: int):
 
 class RegisterView(generic.CreateView):
     form_class = CustomUserCreationForm
-    template_name = "registration/register.html"
+    template_name = "core/pages/register.html"
     success_url = reverse_lazy("login")
 
 
 
 
 class CustomLoginView(LoginView):
-    template_name = "registration/login.html"
+    template_name = "core/pages/login.html"
 
 @require_http_methods(["GET", "POST"])
 def lap_telemetry(request):
