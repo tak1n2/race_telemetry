@@ -4,6 +4,7 @@
 {% block caption %}Tracks{% endblock %}
 {% block content %}
 <div>
+{% if request.user.is_staff %}
   <form class="form" action="{% url 'tracks' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input class="input" type="text" name="name" placeholder="Name" required>
@@ -14,6 +15,7 @@
     <input class="input" type="file" name="photo" accept="image/*">
     <button type="submit">Save 💾</button>
   </form>
+{% endif %}
 </div>
 
 <div>

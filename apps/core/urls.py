@@ -14,7 +14,7 @@ urlpatterns=[
     path('users/register/', RegisterView.as_view(), name='register'),
     path('users/profile/', ProfileView.as_view(), name='profile'),
     path('users/logout/', logout_view, name='logout'),
-    path('users/logged-out/', TemplateView.as_view(template_name="users/logged_out.html"), name='logged_out'),
+    path('users/logged-out/', TemplateView.as_view(template_name="core/pages/logged_out.html"), name='logged_out'),
 
 
     # Live telemetry

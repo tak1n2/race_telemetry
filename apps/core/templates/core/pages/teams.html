@@ -4,12 +4,14 @@
 {% block caption  %} Teams {% endblock caption  %}
 {% block content %}
     <div>
+    {% if request.user.is_staff %}
         <form class="form" action="{% url 'teams' %}" method="post">
             {% csrf_token %}
             <input class="input" type="text" name="name" placeholder="Name" required>
             <input class="input" type="text" name="country" placeholder="Country" required>
             <button type="submit">Save 💾</button>
         </form>
+    {% endif %}
     </div>
     <div>
         <table class="card">

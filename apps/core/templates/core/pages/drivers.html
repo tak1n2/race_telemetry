@@ -4,6 +4,7 @@
 {% block caption  %} Drivers {% endblock caption  %}
 {% block content %}
     <div>
+        {% if request.user.is_staff %}
         <form class="form" action="{% url 'drivers' %}" method="post">
             {% csrf_token %}
             <input class="input" type="text" name="first_name" placeholder="First Name" required>
@@ -18,6 +19,7 @@
             </select>
             <button type="submit">Save 💾</button>
         </form>
+        {% endif %}
     </div>
     <div>
         <table class="card">

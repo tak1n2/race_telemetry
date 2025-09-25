@@ -32,13 +32,16 @@
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="98098d71-9da1-425b-9609-ffda48abd05b" object-ref="schemas/main/tables/core_livesession" />
+      <object connection-id="98098d71-9da1-425b-9609-ffda48abd05b" object-ref="schemas/main/tables/auth_user" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="98098d71-9da1-425b-9609-ffda48abd05b" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="98098d71-9da1-425b-9609-ffda48abd05b" dataset="main.auth_user" active-filter-id="f0bf9c59-a33e-4a01-a8b2-5fd76d209d39">
+      <filter id="f0bf9c59-a33e-4a01-a8b2-5fd76d209d39" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
     <filter-actions connection-id="98098d71-9da1-425b-9609-ffda48abd05b" dataset="main.core_team" active-filter-id="" />
     <filter-actions connection-id="98098d71-9da1-425b-9609-ffda48abd05b" dataset="main.core_livesession" active-filter-id="d19d3148-ad99-464e-9aaf-3397763cde9d">
       <filter id="d19d3148-ad99-464e-9aaf-3397763cde9d" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />

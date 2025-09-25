@@ -57,10 +57,13 @@ class RoleRequiredMiddleware:
         if (not request.user.is_authenticated) or _is_exempt(match):
             return self.get_response(request)
 
+        if request.user.is_superuser or request.user.is_staff:
+            return self.get_response(request)
+
         url_name = match.url_name
         namespace = match.namespace
-
         role = getattr(request.user, 'role', 'user')
+
         if role == 'admin':
             return self.get_response(request)
 
@@ -77,3 +80,4 @@ class RoleRequiredMiddleware:
             return self.get_response(request)
 
         return redirect(reverse('welcome'))
+
